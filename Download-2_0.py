@@ -5,73 +5,69 @@ from pytubefix import *
 from pytubefix.cli import on_progress
 
 
-
 def show_on_progress(stream, chunk, bytes_remaining):
     total_size = stream.filesize
     bytes_downloaded = total_size - bytes_remaining
     percent = (bytes_downloaded / total_size) * 100
-    progress_label = f"Progresso: {on_progress:.2f}%"
+    progress_label.configure(text=f"Progresso: {percent:.2f}%")
+    app.update_idletasks()  # Garante que a GUI seja atualizada em tempo real
 
 
 def down_test():
-    url = url_entry.get()
+    """
+    Baixa um vídeo ou áudio do YouTube.
+    
+    Args:
+        url (str): URL do vídeo no YouTube.
+        save_path (str): Caminho onde o arquivo será salvo.
+        custom_name (str): Nome customizado do arquivo.
+        is_audio (bool): Se True, baixa apenas o áudio.
+    """
 
-    save_path = ctk.filedialog.askdirectory(title='Escolha a pasta para salvar o arquivo')
-    if not save_path:
-        messagebox.showerror("Erro", "Por favor, escolha uma pasta para salvar o arquivo.")
-    yt = YouTube(url=url, on_progress_callback=on_progress)
-
-    custom_name = filename_entry.get().strip()
-    if not custom_name or checkbox.get() == 'on':
-        print('Titulo Original do Vídeo')
-        custom_name = yt.title
-
-    # Download Audio
-    if radio_var.get() == 1:
-        ys = yt.streams.get_audio_only()
-
-    #Download Video
-    else:
-        ys = yt.streams.get_highest_resolution()
-
-    ys.download(output_path=save_path, filename=custom_name)
-
-
-def download_video():
-    url = url_entry.get()
+    url = url_entry.get().strip()
     if not url:
         messagebox.showerror("Erro", "Por favor, insira um link do YouTube.")
         return
 
-    save_path = filedialog.askdirectory(title="Escolha a pasta para salvar o arquivo")
+    save_path = ctk.filedialog.askdirectory(title='Escolha a pasta para salvar o arquivo')
     if not save_path:
         messagebox.showerror("Erro", "Por favor, escolha uma pasta para salvar o arquivo.")
         return
 
+
     custom_name = filename_entry.get().strip()
-    if not custom_name:
-        messagebox.showerror("Erro", "Por favor, insira um nome para o arquivo.")
-        return
+    if not custom_name or checkbox.get() == 'on':
+        print('Titulo Original do Vídeo')
+        try:
+            yt_temp = YouTube(url)
+            custom_name = yt_temp.title
+        except Exception:
+            messagebox.showerror('Error', 'Não foi possível obter o título do vídeo.')
+            return
 
     try:
-        yt = YouTube(url, on_progress_callback=on_progress)
-
-        if format_var.get() == "video":
-            stream = yt.streams.filter(progressive=True, file_extension="mp4").order_by("resolution").desc().first()
-        elif format_var.get() == "audio":
-            stream = yt.streams.filter(only_audio=True).first()
+        yt = YouTube(url=url, on_progress_callback=on_progress)
+        # Download Audio
+        if radio_var.get() == 1:
+            ys = yt.streams.get_audio_only()
+            file_extension = '.m4a'
+        #Download Video
         else:
-            messagebox.showerror("Erro", "Escolha um formato válido.")
+            ys = yt.streams.get_highest_resolution()
+            file_extension = '.mp4'
+        if not ys:
+            messagebox.showerror('Erro', 'Nenhum fluxo compatível encontrado.')
             return
+        
+        # Adiciona a extensão ao nome do arquivo se não estiver presente
+        if not custom_name.lower().endswith(file_extension):
+            custom_name += file_extension
 
-        if not stream:
-            messagebox.showerror("Erro", "Nenhum fluxo compatível encontrado.")
-            return
 
-        stream.download(output_path=save_path, filename=custom_name)
+        ys.download(output_path=save_path, filename=custom_name)
         messagebox.showinfo("Sucesso", f"'{custom_name}' foi baixado com sucesso em {save_path}!")
     except Exception as e:
-        messagebox.showerror("Erro", f"Ocorreu um erro ao baixar o vídeo: {e}")
+        messagebox.showerror('Error', f'Ocorreu um erro ao baixar: {e}')
 
 
 # Window Settings
@@ -140,18 +136,19 @@ radiobutton_1 = ctk.CTkRadioButton(app, text="Audio",
                                             command=radiobutton_event, variable= radio_var, value=1)
 radiobutton_2 = ctk.CTkRadioButton(app, text="Vídeo",
                                             command=radiobutton_event, variable= radio_var, value=2)
-
-
 radiobutton_1.pack(padx=10, pady=10)
 radiobutton_2.pack(padx=10, pady=10)
 
 
+# Label de porcentagem
+progress_label = ctk.CTkLabel(app, text=f'Progresso: 0%', width=350)
+progress_label.pack(padx=10, pady=10)
+
+
+# Botão para baixar arquivo
 botao_baixar = ctk.CTkButton(app, text='Baixar', command=down_test)
 botao_baixar.pack(padx=10, pady=10)
 
-
-
-# ctk.CTkLabel(app, text="Formato disponivel:").pack(padx=10, pady=10)
 
 # Botão fechar aplicativo
 botao_sair = ctk.CTkButton(app, text='Sair', command=app.destroy)
