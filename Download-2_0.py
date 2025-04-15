@@ -134,12 +134,15 @@ def radiobutton_event():
 # Campo para escolher o formato que vai ser baixado
 radio_label = ctk.CTkLabel(app, text='Escolha qual formato deseja baixar')
 radio_var = tk.IntVar(value=2)
-radiobutton_1 = ctk.CTkRadioButton(app, text="Audio",
+radio_audio = ctk.CTkRadioButton(app, text="Audio",
                                             command=radiobutton_event, variable= radio_var, value=1)
-radiobutton_2 = ctk.CTkRadioButton(app, text="Vídeo",
+radio_video = ctk.CTkRadioButton(app, text="Vídeo",
                                             command=radiobutton_event, variable= radio_var, value=2)
-radiobutton_1.pack(padx=10, pady=10)
-radiobutton_2.pack(padx=10, pady=10)
+radio_audio.pack(padx=20, pady=10)
+radio_video.pack(padx=20, pady=10)
+
+# radio_audio.grid(row=5, column=0)
+# radio_video.grid(row=5, column=1)
 
 
 # Label de porcentagem
