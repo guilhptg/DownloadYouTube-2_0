@@ -65,7 +65,9 @@ def down_test():
 
 
         ys.download(output_path=save_path, filename=custom_name)
-        messagebox.showinfo("Sucesso", f"'{custom_name}' foi baixado com sucesso em {save_path}!")
+        
+        # Mensagem de confirmação
+        ctk.CTkLabel(app, text=f"'{custom_name}' foi baixado com sucesso em {save_path}!", font=('Arial', 20)).pack(pady=20, padx=20)
     except Exception as e:
         messagebox.showerror('Error', f'Ocorreu um erro ao baixar: {e}')
 
@@ -91,7 +93,7 @@ ctk.set_appearance_mode("system")
 app = ctk.CTk()
 
 # Tamanho janela principal
-app.geometry('600x600')
+app.geometry('800x600')
 
 # Title
 app.title('Download YouTube 2.0')
@@ -151,7 +153,7 @@ botao_baixar.pack(padx=10, pady=10)
 
 
 # Botão fechar aplicativo
-botao_sair = ctk.CTkButton(app, text='Sair', command=app.destroy)
+botao_sair = ctk.CTkButton(app, text='Sair', command=app.destroy, fg_color='red', )
 botao_sair.pack(pady=10)
 
 
