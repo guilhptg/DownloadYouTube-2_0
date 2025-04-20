@@ -1,7 +1,7 @@
 import tkinter as tk
 from tkinter import messagebox
 import customtkinter as ctk
-from pytubefix import *
+from pytubefix import YouTube
 from pytubefix.cli import on_progress
 
 
@@ -13,7 +13,7 @@ def show_on_progress(stream, chunk, bytes_remaining):
     app.update_idletasks()  # Garante que a GUI seja atualizada em tempo real
 
 
-def down_test():
+def download_yt():
     """
     Baixa um vídeo ou áudio do YouTube.
     
@@ -67,7 +67,9 @@ def down_test():
         ys.download(output_path=save_path, filename=custom_name)
         
         # Mensagem de confirmação
-        ctk.CTkLabel(app, text=f"'{custom_name}' foi baixado com sucesso em {save_path}!", font=('Arial', 20)).pack(pady=20, padx=20)
+        label_frame = ctk.CTkFrame(app)
+        label_frame.pack(pady=20, padx=20)
+        ctk.CTkLabel(label_frame, text=f"'{custom_name}' \Baixado com sucesso! \nEm {save_path}!", font=('Arial', 20)).pack(pady=20, padx=20)
     except Exception as e:
         messagebox.showerror('Error', f'Ocorreu um erro ao baixar: {e}')
 
@@ -85,9 +87,6 @@ ctk.set_appearance_mode("system")
 
 # customtkinter.set_widget_scaling(float_value)  # widgrootet dimensions and text size
 # customtkinter.set_window_scaling(float_value)  # window geometry dimensions
-
-
-
 
 # Crate APP
 app = ctk.CTk()
@@ -133,17 +132,20 @@ def radiobutton_event():
 
 # Campo para escolher o formato que vai ser baixado
 radio_label = ctk.CTkLabel(app, text='Escolha qual formato deseja baixar')
+
 radio_var = tk.IntVar(value=2)
-radio_audio = ctk.CTkRadioButton(app, text="Audio",
+
+radio_frame = ctk.CTkFrame(app)
+radio_frame.pack(pady=10, padx=20)
+
+
+radio_audio = ctk.CTkRadioButton(radio_frame, text="Audio",
                                             command=radiobutton_event, variable= radio_var, value=1)
-radio_video = ctk.CTkRadioButton(app, text="Vídeo",
+radio_video = ctk.CTkRadioButton(radio_frame, text="Vídeo",
                                             command=radiobutton_event, variable= radio_var, value=2)
-radio_audio.pack(padx=20, pady=10)
-radio_video.pack(padx=20, pady=10)
 
-# radio_audio.grid(row=5, column=0)
-# radio_video.grid(row=5, column=1)
-
+radio_audio.pack(padx=20, pady=15, side=tk.LEFT)
+radio_video.pack(padx=20, pady=15)
 
 # Label de porcentagem
 progress_label = ctk.CTkLabel(app, text=f'Progresso: 0%', width=350)
@@ -151,7 +153,7 @@ progress_label.pack(padx=10, pady=10)
 
 
 # Botão para baixar arquivo
-botao_baixar = ctk.CTkButton(app, text='Baixar', command=down_test)
+botao_baixar = ctk.CTkButton(app, text='Baixar', command=download_yt)
 botao_baixar.pack(padx=10, pady=10)
 
 
