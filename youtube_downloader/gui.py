@@ -1,8 +1,8 @@
 import tkinter as tk
 from tkinter import messagebox
 import customtkinter as ctk
-from utils import show_progress, ask_save_directory
-from downloader import download_video_audio
+from youtube_downloader.utils import show_progress, ask_save_directory
+from youtube_downloader.downloader import download_video_audio
 
 # Interface Gráfica
 # Window Settings

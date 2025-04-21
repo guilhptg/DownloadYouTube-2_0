@@ -1,6 +1,6 @@
 from pytubefix import YouTube
 from tkinter import messagebox
-from utils import ask_save_directory, sanitize_filename
+from youtube_downloader.utils import ask_save_directory, sanitize_filename
 
 def download_video_audio(url, custom_name, use_original_name, format_choice, progress_callback):
     """
