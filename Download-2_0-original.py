@@ -43,6 +43,7 @@ def download_yt():
             custom_name = yt_temp.title
         except Exception:
             messagebox.showerror('Error', 'Não foi possível obter o título do vídeo.')
+            print(e,'custom name')
             return
 
     try:
@@ -72,6 +73,7 @@ def download_yt():
         ctk.CTkLabel(label_frame, text=f"'{custom_name}' \Baixado com sucesso! \nEm {save_path}!", font=('Arial', 20)).pack(pady=20, padx=20)
     except Exception as e:
         messagebox.showerror('Error', f'Ocorreu um erro ao baixar: {e}')
+        print(e, '3')
 
 
 # Window Settings
@@ -168,3 +170,8 @@ botao_sair.pack(pady=10)
 
 # Loop de aplicação
 app.mainloop()
+
+
+
+
+# TODO - Adaptar formato de saída de áudio compatível com WhatsApp
