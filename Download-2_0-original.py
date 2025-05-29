@@ -51,7 +51,7 @@ def download_yt():
         # Download Audio
         if radio_var.get() == 1:
             ys = yt.streams.get_audio_only()
-            file_extension = '.m4a'
+            file_extension = '.mp4'
         #Download Video
         else:
             ys = yt.streams.get_highest_resolution()
