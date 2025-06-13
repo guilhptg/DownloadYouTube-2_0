@@ -1,3 +1,4 @@
+import os
 import tkinter as tk
 from tkinter import messagebox
 import customtkinter as ctk
@@ -5,12 +6,29 @@ from pytubefix import YouTube
 from pytubefix.cli import on_progress
 
 
-def show_on_progress(stream, chunk, bytes_remaining):
+def obter_titulo(url):
+    try:
+        return YouTube(url).title
+    except Exception as e:
+        print('Erro ao obter título: ', e)
+
+
+
+def nome_valido(nome):
+    """
+    Remove caracteres inválidos para nomes de arquivos.
+    """
+    import re
+    return re.sub(r'[\\/*?:"<>|]', "", nome)
+
+
+def show_on_progress(stream, chunk, bytes_remaining, progress_bar):
     total_size = stream.filesize
     bytes_downloaded = total_size - bytes_remaining
     percent = (bytes_downloaded / total_size) * 100
     progress_label.configure(text=f"Progresso: {percent:.2f}%")
     app.update_idletasks()  # Garante que a GUI seja atualizada em tempo real
+    progress_bar.set(0)
 
 
 def download_yt():
@@ -51,7 +69,7 @@ def download_yt():
         # Download Audio
         if radio_var.get() == 1:
             ys = yt.streams.get_audio_only()
-            file_extension = '.mp4'
+            file_extension = '.wav'
         #Download Video
         else:
             ys = yt.streams.get_highest_resolution()
